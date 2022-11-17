@@ -50,3 +50,24 @@ function putStoriesOnPage() {
 
   $allStoriesList.show();
 }
+
+ /** Adds story data to API, makes a Story instance, adds it to story list.
+   * - user - the current instance of User who will post the story
+   * - obj of {title, author, url}
+   *
+   * Returns the new Story instance
+   */
+
+
+$("#submit-form").on("submit", addStoryToList);
+
+function addStoryToList() {
+
+  const author = $("#author-input").val();
+  const title = $("title-input").val();
+  const url = $("url-input").val();
+
+
+
+
+}
