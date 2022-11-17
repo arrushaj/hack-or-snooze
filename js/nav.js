@@ -36,3 +36,16 @@ function updateNavOnLogin() {
   $navLogOut.show();
   $navUserProfile.text(`${currentUser.username}`).show();
 }
+
+const $submitButton = $("#submit-story");
+$submitButton.on("click", submitLinkClick);
+
+function submitLinkClick (e) {
+
+
+  let $sForm = $("#submit-form");
+
+  $sForm.show();
+
+
+}
