@@ -1,13 +1,10 @@
 "use strict";
 
 const BASE_URL = "https://hack-or-snooze-v3.herokuapp.com";
-const TEST_TOKEN =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJhbmRvbSIsImlhdCI6MTY2ODcwOTQ4NX0._wR1WVSdcUq5aI2QQefg7fGWCyqZxRvZEADhgzGZg74";
 
 /******************************************************************************
  * Story: a single story in the system
  */
-
 class Story {
   /** Make instance of Story from data object about story:
    *   - {title, author, url, username, storyId, createdAt}
@@ -23,7 +20,6 @@ class Story {
   }
 
   /** Parses hostname out of URL and returns it. */
-
   getHostName() {
     const newUrl = new URL(this.url);
     return newUrl.hostname;
@@ -31,18 +27,15 @@ class Story {
 
   /** Generates story instance from storyId provided using the API */
   static async getStoryObj(storyId) {
+    let response = await axios.get(`${BASE_URL}/stories/${storyId}`);
 
-    let response = await axios.get(`${BASE_URL}/stories/${storyId}`)
-    console.log("Generated", response);
     return new Story(response.data.story);
-
   }
 }
 
 /******************************************************************************
  * List of Story instances: used by UI to show story lists in DOM.
  */
-
 class StoryList {
   constructor(stories) {
     this.stories = stories;
@@ -81,12 +74,11 @@ class StoryList {
    *
    * Returns the new Story instance
    */
-
   async addStory(currentUser, storyObj) {
     let response = await axios.post(`${BASE_URL}/stories`, {
       token: currentUser.loginToken,
       story: storyObj,
-    }); // clean up {storyObj}
+    });
     let newStory = new Story(response.data.story);
 
     storyList.stories.unshift(newStory);
@@ -98,13 +90,11 @@ class StoryList {
 /******************************************************************************
  * User: a user in the system (only used to represent the current user)
  */
-
 class User {
   /** Make user instance from obj of user data and a token:
    *   - {username, name, createdAt, favorites[], ownStories[]}
    *   - token
    */
-
   constructor(
     { username, name, createdAt, favorites = [], ownStories = [] },
     token
@@ -211,8 +201,6 @@ class User {
    */
   async addFavorite(story) {
 
-    console.log(story);
-
     const storyId = story.storyId;
     let response = await axios({
       url: `${BASE_URL}/users/${currentUser.username}/favorites/${storyId}`,
@@ -220,8 +208,7 @@ class User {
       params: { token: currentUser.loginToken },
     });
 
-    console.log(response);
-    currentUser.favorites.push(story);
+    this.favorites.push(story); // replace all currentUser w this
   }
 
   /**
@@ -236,12 +223,11 @@ class User {
       params: { token: currentUser.loginToken },
     });
 
-    console.log(response);
-
     for (let i = 0; i < currentUser.favorites.length; i++) {
       if (story.storyId === currentUser.favorites[i].storyId) {
         currentUser.favorites.splice(i, 1);
-      }
+      } // filter use
     }
   }
 }
+// helper function for POST/ DELETE

@@ -4,7 +4,6 @@
 let storyList;
 
 /** Get and show stories when site first loads. */
-
 async function getAndShowStoriesOnStart() {
   storyList = await StoryList.getStories();
   $storiesLoadingMsg.remove();
@@ -18,18 +17,12 @@ async function getAndShowStoriesOnStart() {
  *
  * Returns the markup for the story.
  */
-
 function generateStoryMarkup(story) {
   const hostName = story.getHostName();
   let className = "";
-
+  // assign class here instead
   if (currentUser) {
-    className = "bi bi-star";
-    for (let favorite of currentUser.favorites) {
-      if (favorite.storyId === story.storyId) {
-        className = "bi bi-star-fill";
-      }
-    }
+    className = checkIfUserFavorited(story);
   }
   return $(`
       <li id="${story.storyId}">
@@ -44,8 +37,19 @@ function generateStoryMarkup(story) {
     `);
 }
 
-/** Gets list of stories from server, generates their HTML, and puts on page. */
+/** checks if the list item is favorited or not and updates the class. */
+function checkIfUserFavorited(story) {
+  let className = "bi bi-star";
+  for (let favorite of currentUser.favorites) {
+    if (favorite.storyId === story.storyId) {
+      return (className = "bi bi-star-fill");
+    }
+  }
+  return className;
+}
+// return t/f instead .find()
 
+/** Gets list of stories from server, generates their HTML, and puts on page. */
 function putStoriesOnPage() {
   console.debug("putStoriesOnPage");
 
@@ -60,13 +64,14 @@ function putStoriesOnPage() {
   $allStoriesList.show();
 }
 
+/** displays favorites of current user on page. */
 function putFavoritesOnPage() {
   console.debug("putFavoritesOnPage");
 
   $allFavoritesList.empty();
 
   if (currentUser.favorites.length === 0) {
-    $allFavoritesList.append(`<h1>No favorites added!<h1>`)
+    $allFavoritesList.append(`<h1>No favorites added!<h1>`);
     $allFavoritesList.show();
     return;
   }
@@ -85,7 +90,6 @@ $("#submit-form").on("submit", addStoryToList);
 /** Takes form inputs, calls storyList method
  * and refreshes page asynchronously using getAndShowStoriesOnStart
  */
-
 async function addStoryToList() {
   const author = $("#author-input").val();
   const title = $("#title-input").val();
@@ -111,6 +115,8 @@ async function addOrRemoveFavorite(evt) {
   let storyId = $containerListItem.attr("id");
   let storyObj = await Story.getStoryObj(storyId);
 
+  // CONST
+  // .toggle class method
   if ($(evt.target).hasClass("bi-star-fill")) {
     await currentUser.removeFavorite(storyObj);
     $(evt.target).removeClass("bi-star-fill");

@@ -5,7 +5,6 @@
  */
 
 /** Show main list of all stories when click site name */
-
 function navAllStories(evt) {
   console.debug("navAllStories", evt);
   evt.preventDefault();
@@ -28,7 +27,6 @@ function navLoginClick(evt) {
 $navLogin.on("click", navLoginClick);
 
 /** When a user first logins in, update the navbar to reflect that. */
-
 function updateNavOnLogin() {
   console.debug("updateNavOnLogin");
   $(".main-nav-links").show();
@@ -37,7 +35,6 @@ function updateNavOnLogin() {
   $navUserProfile.text(`${currentUser.username}`).show();
 }
 
-const $submitButton = $("#submit-story");
 $submitButton.on("click", submitLinkClick);
 
 /** When submit is clicked on nav, it will display the form */
@@ -48,12 +45,13 @@ function submitLinkClick(e) {
   $navSubmitStory.show();
 }
 
-const $favoritesNav = $("#show-favorites");
-$favoritesNav.on('click', showFavoritesOfCurrentUser);
-
+$favoritesNav.on("click", showFavoritesOfCurrentUser);
+/**  Shows the favorites page for the current user. */
 function showFavoritesOfCurrentUser(evt) {
-  evt.preventDefault();
-  hidePageComponents();
-  putFavoritesOnPage();
-
+  if (currentUser) {
+    evt.preventDefault();
+    hidePageComponents();
+    putFavoritesOnPage();
+  }
 }
+// only show navbar if "nav-left class" // current user acts as local storage

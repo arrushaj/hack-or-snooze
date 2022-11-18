@@ -60,6 +60,9 @@ function logout(evt) {
   console.debug("logout", evt);
   localStorage.clear();
   location.reload();
+  // Not sure how to implement.
+  // hidePageComponents();
+  // $allStoriesList.show();
 }
 
 $navLogOut.on("click", logout);
@@ -109,7 +112,7 @@ function saveUserCredentialsInLocalStorage() {
 
 function updateUIOnUserLogin() {
   console.debug("updateUIOnUserLogin");
-
+  putStoriesOnPage(); // why? (ensure stars populate on login)
   $allStoriesList.show();
 
   updateNavOnLogin();
