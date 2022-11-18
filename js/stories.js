@@ -20,9 +20,8 @@ async function getAndShowStoriesOnStart() {
  */
 
 function generateStoryMarkup(story) {
-  // console.debug("generateStoryMarkup", story);
-
   const hostName = story.getHostName();
+
   return $(`
       <li id="${story.storyId}">
         <a href="${story.url}" target="a_blank" class="story-link">
@@ -47,7 +46,7 @@ function putStoriesOnPage() {
     const $story = generateStoryMarkup(story);
     $allStoriesList.append($story);
   }
-
+  // generate markup + prepend.
   $allStoriesList.show();
 }
 
@@ -58,20 +57,16 @@ $("#submit-form").on("submit", addStoryToList);
  */
 
 async function addStoryToList() {
-
   const author = $("#author-input").val();
   const title = $("#title-input").val();
   const url = $("#url-input").val();
 
-  let storyObj = {
-    author,
-    title,
-    url
-  }
-  console.log(storyObj);
+  let storyObj = { author, title, url };
 
-  await storyList.addStory(currentUser, storyObj);
+  let newStory = await storyList.addStory(currentUser, storyObj);
 
-  getAndShowStoriesOnStart();
-
+  $allStoriesList.prepend(generateStoryMarkup(newStory));
+  $navSubmitStory.trigger("reset");
+  $navSubmitStory.hide();
 }
+

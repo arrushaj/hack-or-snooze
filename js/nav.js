@@ -40,12 +40,14 @@ function updateNavOnLogin() {
 const $submitButton = $("#submit-story");
 $submitButton.on("click", submitLinkClick);
 
-function submitLinkClick (e) {
+// TODO:doc strings
+function submitLinkClick(e) { //clickNavSubmitButton // lots of naming work.
 
 
-  let $sForm = $("#submit-form");
-
-  $sForm.show();
+  e.preventDefault();
+  hidePageComponents();
+  $allStoriesList.show();
+  $navSubmitStory.show();
 
 
 }
