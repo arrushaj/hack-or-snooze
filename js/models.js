@@ -30,18 +30,11 @@ class Story {
   }
 
   static async getStoryObj(storyId) {
-    for (let i = 0; i < storyList.length; i++) {
-      if (storyId === storyList[i].storyId) {
-        return {
-          author: storyList[i].author,
-          createdAt: storyList[i].createdAt,
-          storyId: storyList[i].storyId,
-          title: storyList[i].title,
-          url: storyList[i].url,
-          username: storyList[i].username,
-        }
-      }
-    }
+
+    let response = await axios.get(`${BASE_URL}/stories/${storyId}`)
+
+    return response.data.story;
+
   }
 }
 
@@ -214,6 +207,9 @@ class User {
 
   /** addFavorite: adds favorite story to the current users favorites array. */
   async addFavorite(story) {
+
+    console.log(story);
+
     const storyId = story.storyId;
     let response = await axios({
       url: `${BASE_URL}/users/${currentUser.username}/favorites/${storyId}`,
@@ -224,13 +220,22 @@ class User {
     currentUser.favorites.push(story);
   }
 
-  removeFavorite(story){
+  async removeFavorite(story) {
+    const storyId = story.storyId;
+    let response = await axios({
+      url: `${BASE_URL}/users/${currentUser.username}/favorites/${storyId}`,
+      method: "DELETE",
+      params: { token: currentUser.loginToken },
+    });
+
+    console.log(response);
 
     for (let i = 0; i < currentUser.favorites.length; i++) {
-        console.log("For loop works");
-        if (story.storyId === currentUser.favorites[i].storyId) {
-          currentUser.favorites.splice(i,1);
-        }
+      console.log("For loop works");
+
+      if (story.storyId === currentUser.favorites[i].storyId) {
+        currentUser.favorites.splice(i, 1);
+      }
     }
   }
 }

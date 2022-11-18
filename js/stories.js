@@ -21,10 +21,14 @@ async function getAndShowStoriesOnStart() {
 
 function generateStoryMarkup(story) {
   const hostName = story.getHostName();
-  let className = "bi bi-star";
-  for (let favorite of currentUser.favorites) {
-    if (favorite.storyId === story.storyId) {
-      className = "bi bi-star-fill";
+  let className = "";
+
+  if (currentUser) {
+    className = "bi bi-star";
+    for (let favorite of currentUser.favorites) {
+      if (favorite.storyId === story.storyId) {
+        className = "bi bi-star-fill";
+      }
     }
   }
   return $(`
@@ -76,14 +80,20 @@ async function addStoryToList() {
   $navSubmitStory.hide();
 }
 
-$allStoriesList.on('click', "i", addOrRemoveFavorite);
+$allStoriesList.on("click", "i", addOrRemoveFavorite);
 
-function addOrRemoveFavorite(evt) {
-  console.log("Works");
+async function addOrRemoveFavorite(evt) {
   let $containerListItem = $(evt.target).closest("li");
   let storyId = $containerListItem.attr("id");
-  console.log(storyId);
+  let storyObj = await Story.getStoryObj(storyId);
+
   if ($(evt.target).hasClass("bi-star-fill")) {
-    removeFavorite(storyId)
+    await currentUser.removeFavorite(storyObj);
+    $(evt.target).removeClass("bi-star-fill");
+    $(evt.target).addClass("bi-star");
+  } else {
+    await currentUser.addFavorite(storyObj);
+    $(evt.target).removeClass("bi-star");
+    $(evt.target).addClass("bi-star-fill");
   }
 }
