@@ -60,6 +60,26 @@ function putStoriesOnPage() {
   $allStoriesList.show();
 }
 
+function putFavoritesOnPage() {
+  console.debug("putFavoritesOnPage");
+
+  $allFavoritesList.empty();
+
+  if (currentUser.favorites.length === 0) {
+    $allFavoritesList.append(`<h1>No favorites added!<h1>`)
+    $allFavoritesList.show();
+    return;
+  }
+
+  // loop through all of our stories
+  for (let story of currentUser.favorites) {
+    const $story = generateStoryMarkup(story);
+    $allFavoritesList.append($story);
+  }
+
+  $allFavoritesList.show();
+}
+
 $("#submit-form").on("submit", addStoryToList);
 
 /** Takes form inputs, calls storyList method
@@ -81,7 +101,11 @@ async function addStoryToList() {
 }
 
 $allStoriesList.on("click", "i", addOrRemoveFavorite);
+$allFavoritesList.on("click", "i", addOrRemoveFavorite);
 
+/** Calls addFavorite or removeFavorite methods depending on class
+ * of icon element
+ */
 async function addOrRemoveFavorite(evt) {
   let $containerListItem = $(evt.target).closest("li");
   let storyId = $containerListItem.attr("id");

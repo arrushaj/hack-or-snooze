@@ -29,11 +29,12 @@ class Story {
     return newUrl.hostname;
   }
 
+  /** Generates story instance from storyId provided using the API */
   static async getStoryObj(storyId) {
 
     let response = await axios.get(`${BASE_URL}/stories/${storyId}`)
-
-    return response.data.story;
+    console.log("Generated", response);
+    return new Story(response.data.story);
 
   }
 }
@@ -205,7 +206,9 @@ class User {
     }
   }
 
-  /** addFavorite: adds favorite story to the current users favorites array. */
+  /** addFavorite: adds favorite story to the current users favorites array
+   * also calls api and posts story to favorites
+   */
   async addFavorite(story) {
 
     console.log(story);
@@ -217,9 +220,14 @@ class User {
       params: { token: currentUser.loginToken },
     });
 
+    console.log(response);
     currentUser.favorites.push(story);
   }
 
+  /**
+   * uses axios DELETE to remove favorite and searches local storage
+   * favorites array to remove favorite in local storage
+   */
   async removeFavorite(story) {
     const storyId = story.storyId;
     let response = await axios({
@@ -231,8 +239,6 @@ class User {
     console.log(response);
 
     for (let i = 0; i < currentUser.favorites.length; i++) {
-      console.log("For loop works");
-
       if (story.storyId === currentUser.favorites[i].storyId) {
         currentUser.favorites.splice(i, 1);
       }

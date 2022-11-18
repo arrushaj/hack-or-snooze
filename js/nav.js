@@ -40,14 +40,20 @@ function updateNavOnLogin() {
 const $submitButton = $("#submit-story");
 $submitButton.on("click", submitLinkClick);
 
-
+/** When submit is clicked on nav, it will display the form */
 function submitLinkClick(e) {
-
-
   e.preventDefault();
   hidePageComponents();
   $allStoriesList.show();
   $navSubmitStory.show();
+}
 
+const $favoritesNav = $("#show-favorites");
+$favoritesNav.on('click', showFavoritesOfCurrentUser);
+
+function showFavoritesOfCurrentUser(evt) {
+  evt.preventDefault();
+  hidePageComponents();
+  putFavoritesOnPage();
 
 }
