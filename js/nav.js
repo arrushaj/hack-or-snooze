@@ -40,8 +40,8 @@ function updateNavOnLogin() {
 const $submitButton = $("#submit-story");
 $submitButton.on("click", submitLinkClick);
 
-// TODO:doc strings
-function submitLinkClick(e) { //clickNavSubmitButton // lots of naming work.
+
+function submitLinkClick(e) {
 
 
   e.preventDefault();

@@ -1,14 +1,14 @@
 "use strict";
 
 const BASE_URL = "https://hack-or-snooze-v3.herokuapp.com";
-const TEST_TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJhbmRvbSIsImlhdCI6MTY2ODcwOTQ4NX0._wR1WVSdcUq5aI2QQefg7fGWCyqZxRvZEADhgzGZg74";
+const TEST_TOKEN =
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJhbmRvbSIsImlhdCI6MTY2ODcwOTQ4NX0._wR1WVSdcUq5aI2QQefg7fGWCyqZxRvZEADhgzGZg74";
 
 /******************************************************************************
  * Story: a single story in the system
  */
 
 class Story {
-
   /** Make instance of Story from data object about story:
    *   - {title, author, url, username, storyId, createdAt}
    */
@@ -25,13 +25,10 @@ class Story {
   /** Parses hostname out of URL and returns it. */
 
   getHostName() {
-
     const newUrl = new URL(this.url);
     return newUrl.hostname;
   }
-
 }
-
 
 /******************************************************************************
  * List of Story instances: used by UI to show story lists in DOM.
@@ -63,7 +60,7 @@ class StoryList {
     });
 
     // turn plain old story objects from API into instances of Story class
-    const stories = response.data.stories.map(story => new Story(story));
+    const stories = response.data.stories.map((story) => new Story(story));
 
     // build an instance of our own class using the new array of stories
     return new StoryList(stories);
@@ -76,14 +73,11 @@ class StoryList {
    * Returns the new Story instance
    */
 
-  async addStory( currentUser, storyObj ) {
-
-    let response = await axios.post(
-      `${BASE_URL}/stories`,
-       {token: currentUser.loginToken,
-        story: storyObj
-      }
-    ); // clean up {storyObj}
+  async addStory(currentUser, storyObj) {
+    let response = await axios.post(`${BASE_URL}/stories`, {
+      token: currentUser.loginToken,
+      story: storyObj,
+    }); // clean up {storyObj}
     let newStory = new Story(response.data.story);
 
     storyList.stories.unshift(newStory);
@@ -91,7 +85,6 @@ class StoryList {
     return newStory;
   }
 }
-
 
 /******************************************************************************
  * User: a user in the system (only used to represent the current user)
@@ -103,21 +96,17 @@ class User {
    *   - token
    */
 
-  constructor({
-                username,
-                name,
-                createdAt,
-                favorites = [],
-                ownStories = []
-              },
-              token) {
+  constructor(
+    { username, name, createdAt, favorites = [], ownStories = [] },
+    token
+  ) {
     this.username = username;
     this.name = name;
     this.createdAt = createdAt;
 
     // instantiate Story instances for the user's favorites and ownStories
-    this.favorites = favorites.map(s => new Story(s));
-    this.ownStories = ownStories.map(s => new Story(s));
+    this.favorites = favorites.map((s) => new Story(s));
+    this.ownStories = ownStories.map((s) => new Story(s));
 
     // store the login token on the user so it's easy to find for API calls.
     this.loginToken = token;
@@ -145,7 +134,7 @@ class User {
         name: user.name,
         createdAt: user.createdAt,
         favorites: user.favorites,
-        ownStories: user.stories
+        ownStories: user.stories,
       },
       response.data.token
     );
@@ -172,7 +161,7 @@ class User {
         name: user.name,
         createdAt: user.createdAt,
         favorites: user.favorites,
-        ownStories: user.stories
+        ownStories: user.stories,
       },
       response.data.token
     );
@@ -198,7 +187,7 @@ class User {
           name: user.name,
           createdAt: user.createdAt,
           favorites: user.favorites,
-          ownStories: user.stories
+          ownStories: user.stories,
         },
         token
       );
@@ -208,6 +197,7 @@ class User {
     }
   }
 
+  /** addFavorite: adds favorite story to the current users favorites array. */
   async addFavorite(story) {
     const storyId = story.storyId;
     let response = await axios({
@@ -217,12 +207,15 @@ class User {
     });
 
     currentUser.favorites.push(story);
-
-    console.log(response);
-
   }
 
-  removeFavorite(story) {
+  removeFavorite(story){
 
+    for (let i = 0; i < currentUser.favorites.length; i++) {
+        console.log("For loop works");
+        if (story.storyId === currentUser.favorites[i].storyId) {
+          currentUser.favorites.splice(i,1);
+        }
+    }
   }
 }
