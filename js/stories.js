@@ -21,9 +21,15 @@ async function getAndShowStoriesOnStart() {
 
 function generateStoryMarkup(story) {
   const hostName = story.getHostName();
-
+  let className = "bi bi-star";
+  for (let favorite of currentUser.favorites) {
+    if (favorite.storyId === story.storyId) {
+      className = "bi bi-star-fill";
+    }
+  }
   return $(`
       <li id="${story.storyId}">
+        <i class="${className}"></i>
         <a href="${story.url}" target="a_blank" class="story-link">
           ${story.title}
         </a>
@@ -70,3 +76,14 @@ async function addStoryToList() {
   $navSubmitStory.hide();
 }
 
+$allStoriesList.on('click', "i", addOrRemoveFavorite);
+
+function addOrRemoveFavorite(evt) {
+  console.log("Works");
+  let $containerListItem = $(evt.target).closest("li");
+  let storyId = $containerListItem.attr("id");
+  console.log(storyId);
+  if ($(evt.target).hasClass("bi-star-fill")) {
+    removeFavorite(storyId)
+  }
+}

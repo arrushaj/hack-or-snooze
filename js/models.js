@@ -28,6 +28,21 @@ class Story {
     const newUrl = new URL(this.url);
     return newUrl.hostname;
   }
+
+  static async getStoryObj(storyId) {
+    for (let i = 0; i < storyList.length; i++) {
+      if (storyId === storyList[i].storyId) {
+        return {
+          author: storyList[i].author,
+          createdAt: storyList[i].createdAt,
+          storyId: storyList[i].storyId,
+          title: storyList[i].title,
+          url: storyList[i].url,
+          username: storyList[i].username,
+        }
+      }
+    }
+  }
 }
 
 /******************************************************************************
