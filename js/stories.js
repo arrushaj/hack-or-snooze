@@ -22,7 +22,10 @@ function generateStoryMarkup(story) {
   let className = "";
   // assign class here instead
   if (currentUser) {
-    className = checkIfUserFavorited(story);
+    className = "bi bi-star";
+    if (checkIfUserFavorited(story)) {
+      className = "bi bi-star-fill";
+    };
   }
   return $(`
       <li id="${story.storyId}">
@@ -39,13 +42,12 @@ function generateStoryMarkup(story) {
 
 /** checks if the list item is favorited or not and updates the class. */
 function checkIfUserFavorited(story) {
-  let className = "bi bi-star";
   for (let favorite of currentUser.favorites) {
     if (favorite.storyId === story.storyId) {
-      return (className = "bi bi-star-fill");
+      return true;
     }
   }
-  return className;
+  return false;
 }
 // return t/f instead .find()
 
@@ -90,7 +92,9 @@ $("#submit-form").on("submit", addStoryToList);
 /** Takes form inputs, calls storyList method
  * and refreshes page asynchronously using getAndShowStoriesOnStart
  */
-async function addStoryToList() {
+async function addStoryToList(evt) {
+  evt.preventDefault();
+  console.log("I'm in here");
   const author = $("#author-input").val();
   const title = $("#title-input").val();
   const url = $("#url-input").val();
@@ -98,7 +102,6 @@ async function addStoryToList() {
   let storyObj = { author, title, url };
 
   let newStory = await storyList.addStory(currentUser, storyObj);
-
   $allStoriesList.prepend(generateStoryMarkup(newStory));
   $navSubmitStory.trigger("reset");
   $navSubmitStory.hide();

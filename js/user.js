@@ -112,7 +112,10 @@ function saveUserCredentialsInLocalStorage() {
 
 function updateUIOnUserLogin() {
   console.debug("updateUIOnUserLogin");
+
   putStoriesOnPage(); // why? (ensure stars populate on login)
+  $loginForm.hide();
+  $signupForm.hide();
   $allStoriesList.show();
 
   updateNavOnLogin();

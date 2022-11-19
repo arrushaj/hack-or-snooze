@@ -1,4 +1,4 @@
-"use strict";
+"use strict"
 
 /******************************************************************************
  * Handling navbar clicks and updating navbar
@@ -32,6 +32,7 @@ function updateNavOnLogin() {
   $(".main-nav-links").show();
   $navLogin.hide();
   $navLogOut.show();
+  $(".nav-left").show();
   $navUserProfile.text(`${currentUser.username}`).show();
 }
 

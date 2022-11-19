@@ -82,7 +82,7 @@ class StoryList {
     let newStory = new Story(response.data.story);
 
     storyList.stories.unshift(newStory);
-
+    console.log(newStory);
     return newStory;
   }
 }
@@ -201,9 +201,10 @@ class User {
    */
   async addFavorite(story) {
     const storyId = story.storyId;
-    await apiCallChoice(storyId, "POST");
+    await this.addOrRemoveFavorite(storyId, "POST");
 
     this.favorites.push(story);
+
   }
 
   /**
@@ -212,11 +213,13 @@ class User {
    */
   async removeFavorite(story) {
     const storyId = story.storyId;
-    await apiCallChoice(storyId, "DELETE");
+    await this.addOrRemoveFavorite(storyId, "DELETE");
 
     this.favorites = this.favorites.filter(
-      (fav) => fav.storyId === story.story
+      (fav) => fav.storyId === storyId
     );
+
+    console.log(this.favorites);
   }
 
   /** will add or delete a favorite story */
